@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -193,7 +194,9 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void arbolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arbolMouseClicked
-        
+        int row = arbol.getClosestRowForLocation(evt.getX(), evt.getY());
+        row = row==0?1:row;
+        arbol.setSelectionRow(row);
     }//GEN-LAST:event_arbolMouseClicked
 
     private void bt_AgregarCientificoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_AgregarCientificoActionPerformed
