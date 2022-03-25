@@ -23,9 +23,11 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
-        
         poblarDatos();
+        setModeloArbol();
+        cargarPlanetasPublicos();
         cargarCientificos();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -48,14 +50,20 @@ public class Main extends javax.swing.JFrame {
         bt_Colision = new javax.swing.JButton();
         cb_Cientifico = new javax.swing.JComboBox<>();
         tf_NombreCientificoAgregar = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        bt_AgregarCientifico = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         bt_Reset = new javax.swing.JButton();
+        checkBox = new javax.swing.JCheckBox();
 
         menuP1.setText("Planeta 1");
+        menuP1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuP1ActionPerformed(evt);
+            }
+        });
         pop.add(menuP1);
 
         menuP2.setText("Planeta 2");
@@ -75,7 +83,18 @@ public class Main extends javax.swing.JFrame {
 
         bt_Colision.setText("Colisionar Planetas");
 
-        jButton2.setText("Agregar Cientifico");
+        cb_Cientifico.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cb_CientificoItemStateChanged(evt);
+            }
+        });
+
+        bt_AgregarCientifico.setText("Agregar Cientifico");
+        bt_AgregarCientifico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_AgregarCientificoActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Nombre Cientifico");
 
@@ -87,40 +106,50 @@ public class Main extends javax.swing.JFrame {
 
         bt_Reset.setText("Reset Planetas");
 
+        checkBox.setSelected(true);
+        checkBox.setText("Planetas Plublicos");
+        checkBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                checkBoxItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(51, 51, 51)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(tf_Planeta2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(tf_Planeta1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(bt_Colision, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(bt_Reset, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton2)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(tf_NombreCientificoAgregar, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cb_Cientifico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addComponent(barra, javax.swing.GroupLayout.PREFERRED_SIZE, 634, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(51, 51, 51)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(12, 12, 12)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel3)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(tf_Planeta2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(tf_Planeta1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(bt_Colision, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(bt_Reset, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(bt_AgregarCientifico)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(tf_NombreCientificoAgregar, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cb_Cientifico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(barra, javax.swing.GroupLayout.PREFERRED_SIZE, 634, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(checkBox, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -151,10 +180,12 @@ public class Main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tf_NombreCientificoAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
+                        .addComponent(bt_AgregarCientifico)
                         .addGap(77, 77, 77))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(checkBox)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -164,6 +195,42 @@ public class Main extends javax.swing.JFrame {
     private void arbolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arbolMouseClicked
         
     }//GEN-LAST:event_arbolMouseClicked
+
+    private void bt_AgregarCientificoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_AgregarCientificoActionPerformed
+        agregarCientificoCombo();
+    }//GEN-LAST:event_bt_AgregarCientificoActionPerformed
+
+    private void checkBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkBoxItemStateChanged
+        if (checkBox.isSelected()) {
+            cargarPlanetasPublicos();
+        }else{
+            if (cientificos.size()>0) {
+                int seleccionCientifico = cb_Cientifico.getSelectedIndex();
+                if (seleccionCientifico != -1) {
+                    cargarPlanetasCientifico(cientificos.get(seleccionCientifico));
+                }
+            }else{
+                raiz.removeAllChildren();
+                modeloArbol.setRoot(raiz);
+                arbol.setModel(modeloArbol);
+            }
+        }
+    }//GEN-LAST:event_checkBoxItemStateChanged
+
+    private void cb_CientificoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_CientificoItemStateChanged
+        int seleccionCientifico = cb_Cientifico.getSelectedIndex();
+        if (seleccionCientifico != -1) {
+            cargarPlanetasCientifico(cientificos.get(seleccionCientifico));
+            checkBox.setSelected(false);
+        }else{
+            checkBox.setSelected(true);
+            cargarPlanetasPublicos();
+        }
+    }//GEN-LAST:event_cb_CientificoItemStateChanged
+
+    private void menuP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuP1ActionPerformed
+        
+    }//GEN-LAST:event_menuP1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,10 +270,11 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTree arbol;
     private javax.swing.JProgressBar barra;
+    private javax.swing.JButton bt_AgregarCientifico;
     private javax.swing.JButton bt_Colision;
     private javax.swing.JButton bt_Reset;
     private javax.swing.JComboBox<String> cb_Cientifico;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox checkBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -259,6 +327,8 @@ public class Main extends javax.swing.JFrame {
     public void cargarCientificos() {
         db.cargarArchivo();
         cientificos = db.getListaCientificos();
+        cargarCientificosCombo();
+        cb_Cientifico.setModel(modeloCombo);
     }
     
     public void guardarDatos(){
@@ -271,16 +341,17 @@ public class Main extends javax.swing.JFrame {
     }
     
     public void cargarPlanetasCientifico(Cientifico c){
-        raiz.removeAllChildren();
+        DefaultMutableTreeNode cientifico = new DefaultMutableTreeNode("Planetas de " + c.toString());
         for (Planeta p : c.getPlanetas()) {
             DefaultMutableTreeNode planeta = new DefaultMutableTreeNode(p);
-            raiz.add(planeta);
+            cientifico.add(planeta);
         }
-        modeloArbol.setRoot(raiz);
+        modeloArbol.setRoot(cientifico);
         arbol.setModel(modeloArbol);
     }
     
     public void cargarPlanetasPublicos(){
+        setModeloArbol();
         raiz.removeAllChildren();
         for (Planeta p : planetasPlublicos) {
             DefaultMutableTreeNode planeta = new DefaultMutableTreeNode(p);
@@ -324,5 +395,27 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Favor seleccion los planetas a colisionar");
         }
     }
+    
+    public void reset(){
+        planeta1 = null;
+        planeta2 = null;
+        tf_Planeta1.setText("");
+        tf_Planeta2.setText("");
+    }
 
+    public void agregarCientificoCombo(){
+        String nombreCientifico = tf_NombreCientificoAgregar.getText();
+        Cientifico c = new Cientifico(nombreCientifico);
+        cientificos.add(c);
+        modeloCombo.addElement(c);
+        cb_Cientifico.setModel(modeloCombo);
+        guardarDatos();
+        tf_NombreCientificoAgregar.setText("");
+        JOptionPane.showMessageDialog(this, "Cientifico agregado Exitosamente");
+    }
+    
+    public void setModeloArbol(){
+        DefaultMutableTreeNode raiz = new DefaultMutableTreeNode("Planetas");
+        arbol.setModel(modeloArbol);
+    }
 }
