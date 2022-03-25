@@ -3,7 +3,7 @@ package examen2labp2_juanoliva_10741313;
 import javax.swing.JOptionPane;
 
 public class Terrestre extends Planeta{
-
+    
     public Terrestre() {
         super();
     }

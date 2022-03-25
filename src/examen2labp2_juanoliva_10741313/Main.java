@@ -6,6 +6,8 @@ package examen2labp2_juanoliva_10741313;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -223,6 +225,10 @@ public class Main extends javax.swing.JFrame {
     ArrayList<Cientifico> cientificos = new ArrayList<>();
     DefaultMutableTreeNode raiz = new DefaultMutableTreeNode("Planetas");
     DefaultTreeModel modeloArbol = new DefaultTreeModel(raiz);
+    DefaultComboBoxModel modeloCombo = new DefaultComboBoxModel();
+    Planeta planeta1 = null;
+    Planeta planeta2 = null;
+    
     
     
     
@@ -237,14 +243,86 @@ public class Main extends javax.swing.JFrame {
         planetasPlublicos.add(new Gaseoso("Neptuno",200000,20000,840,900));
     }
     
-    public double distancia(int x1, int x2, int y1, int y2){
-        double d = Math.sqrt((Math.pow((x2-x1), 2)+(Math.pow((y2-y1), 2))));
+    public double distancia(){
+        double d = 0;
+        if (planeta1 != null && planeta2 != null) {
+            int x1, x2, y1, y2;
+            x1 = planeta1.getCx();
+            x2 = planeta2.getCx();
+            y1 = planeta1.getCy();
+            y2 = planeta2.getCy();
+            d = Math.sqrt((Math.pow((x2-x1), 2)+(Math.pow((y2-y1), 2))));
+        }
         return d;
     }
 
     public void cargarCientificos() {
         db.cargarArchivo();
         cientificos = db.getListaCientificos();
+    }
+    
+    public void guardarDatos(){
+        db.guardarArchivo(cientificos);
+    }
+    
+    public void cargarCientificosCombo(){
+        modeloCombo.removeAllElements();
+        modeloCombo.addAll(cientificos);
+    }
+    
+    public void cargarPlanetasCientifico(Cientifico c){
+        raiz.removeAllChildren();
+        for (Planeta p : c.getPlanetas()) {
+            DefaultMutableTreeNode planeta = new DefaultMutableTreeNode(p);
+            raiz.add(planeta);
+        }
+        modeloArbol.setRoot(raiz);
+        arbol.setModel(modeloArbol);
+    }
+    
+    public void cargarPlanetasPublicos(){
+        raiz.removeAllChildren();
+        for (Planeta p : planetasPlublicos) {
+            DefaultMutableTreeNode planeta = new DefaultMutableTreeNode(p);
+            raiz.add(planeta);
+        }
+        modeloArbol.setRoot(raiz);
+        arbol.setModel(modeloArbol);
+    }
+    
+    public void seleccionPlaneta1(Planeta p, int numeroPlaneta){
+        if (numeroPlaneta == 1) {
+            tf_Planeta1.setText(p.getNombrePlaneta());
+            planeta1 = p;
+        }else{
+            tf_Planeta2.setText(p.getNombrePlaneta());
+            planeta2 = p;
+        }
+    }
+    
+    public void colision(){
+        if (tf_Planeta1.getText().isBlank() || tf_Planeta2.getText().isBlank()) {
+            return;
+        }
+        if (planeta1 != null && planeta2 != null) {
+            AmdBarra ab = new AmdBarra(barra, distancia());
+            Object x = planeta1.colision(planeta2);
+            if (x instanceof Terrestre) {
+                if (cb_Cientifico.getSelectedIndex() != -1) {
+                    cientificos.get(cb_Cientifico.getSelectedIndex()).getPlanetas().add((Terrestre)x);
+                }
+                return;
+            }
+            if (x instanceof Gaseoso) {
+                if (cb_Cientifico.getSelectedIndex() != -1) {
+                    cientificos.get(cb_Cientifico.getSelectedIndex()).getPlanetas().add((Gaseoso)x);
+                }
+                return;
+            }
+            planetasPlublicos.add((Planeta)x);
+        }else{
+            JOptionPane.showMessageDialog(this, "Favor seleccion los planetas a colisionar");
+        }
     }
 
 }
