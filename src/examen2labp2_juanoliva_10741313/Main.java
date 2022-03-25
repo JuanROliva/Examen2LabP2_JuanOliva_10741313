@@ -111,6 +111,11 @@ public class Main extends javax.swing.JFrame {
         jLabel4.setText("Planeta 2");
 
         bt_Reset.setText("Reset Planetas");
+        bt_Reset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_ResetActionPerformed(evt);
+            }
+        });
 
         checkBox.setSelected(true);
         checkBox.setText("Planetas Plublicos");
@@ -245,8 +250,14 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuP2ActionPerformed
 
     private void bt_ColisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_ColisionActionPerformed
-        
+        if (planeta1!=null && planeta2!= null) {
+            colision();
+        }
     }//GEN-LAST:event_bt_ColisionActionPerformed
+
+    private void bt_ResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_ResetActionPerformed
+        reset();
+    }//GEN-LAST:event_bt_ResetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -401,20 +412,31 @@ public class Main extends javax.swing.JFrame {
         }
         if (planeta1 != null && planeta2 != null) {
             AmdBarra ab = new AmdBarra(barra, distancia());
+            Thread hilo = new Thread(ab);
+            hilo.start();
             Object x = planeta1.colision(planeta2);
-            if (x instanceof Terrestre) {
-                if (cb_Cientifico.getSelectedIndex() != -1) {
-                    cientificos.get(cb_Cientifico.getSelectedIndex()).getPlanetas().add((Terrestre)x);
+            int cientificoSeleccionado = cb_Cientifico.getSelectedIndex();
+            if (cientificoSeleccionado != -1) {
+                if (x instanceof Terrestre) {
+                    if (cb_Cientifico.getSelectedIndex() != -1) {
+                        cientificos.get(cb_Cientifico.getSelectedIndex()).getPlanetas().add((Terrestre)x);
+                    }
+                    return;
                 }
-                return;
-            }
-            if (x instanceof Gaseoso) {
-                if (cb_Cientifico.getSelectedIndex() != -1) {
-                    cientificos.get(cb_Cientifico.getSelectedIndex()).getPlanetas().add((Gaseoso)x);
+                if (x instanceof Gaseoso) {
+                    if (cb_Cientifico.getSelectedIndex() != -1) {
+                        cientificos.get(cb_Cientifico.getSelectedIndex()).getPlanetas().add((Gaseoso)x);
+                    }
+                    return;
                 }
-                return;
+            }else{
+                if (x instanceof Boolean) {
+                    return;
+                }else{
+                    planetasPlublicos.add((Planeta)x);
+                    arbol.setModel(modeloArbol);
+                }
             }
-            planetasPlublicos.add((Planeta)x);
         }else{
             JOptionPane.showMessageDialog(this, "Favor seleccion los planetas a colisionar");
         }
