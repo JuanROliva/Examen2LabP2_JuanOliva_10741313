@@ -68,6 +68,11 @@ public class Main extends javax.swing.JFrame {
         pop.add(menuP1);
 
         menuP2.setText("Planeta 2");
+        menuP2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuP2ActionPerformed(evt);
+            }
+        });
         pop.add(menuP2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -75,14 +80,14 @@ public class Main extends javax.swing.JFrame {
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         arbol.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         arbol.setComponentPopupMenu(pop);
-        arbol.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                arbolMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(arbol);
 
         bt_Colision.setText("Colisionar Planetas");
+        bt_Colision.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_ColisionActionPerformed(evt);
+            }
+        });
 
         cb_Cientifico.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -193,12 +198,6 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void arbolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_arbolMouseClicked
-        int row = arbol.getClosestRowForLocation(evt.getX(), evt.getY());
-        row = row==0?1:row;
-        arbol.setSelectionRow(row);
-    }//GEN-LAST:event_arbolMouseClicked
-
     private void bt_AgregarCientificoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_AgregarCientificoActionPerformed
         agregarCientificoCombo();
     }//GEN-LAST:event_bt_AgregarCientificoActionPerformed
@@ -232,8 +231,22 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_cb_CientificoItemStateChanged
 
     private void menuP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuP1ActionPerformed
-        
+        DefaultMutableTreeNode nodo = (DefaultMutableTreeNode)arbol.getLastSelectedPathComponent();
+        if (nodo != null) {
+            seleccionPlaneta((Planeta)nodo.getUserObject(), 1);
+        }
     }//GEN-LAST:event_menuP1ActionPerformed
+
+    private void menuP2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuP2ActionPerformed
+        DefaultMutableTreeNode nodo = (DefaultMutableTreeNode)arbol.getLastSelectedPathComponent();
+        if (nodo != null) {
+            seleccionPlaneta((Planeta)nodo.getUserObject(), 2);
+        }
+    }//GEN-LAST:event_menuP2ActionPerformed
+
+    private void bt_ColisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_ColisionActionPerformed
+        
+    }//GEN-LAST:event_bt_ColisionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -364,13 +377,21 @@ public class Main extends javax.swing.JFrame {
         arbol.setModel(modeloArbol);
     }
     
-    public void seleccionPlaneta1(Planeta p, int numeroPlaneta){
+    public void seleccionPlaneta(Planeta p, int numeroPlaneta){
         if (numeroPlaneta == 1) {
-            tf_Planeta1.setText(p.getNombrePlaneta());
-            planeta1 = p;
+            if (p != planeta2 ) {
+                tf_Planeta1.setText(p.getNombrePlaneta());
+                planeta1 = p;
+            }else{
+                JOptionPane.showMessageDialog(null, "Favor seleccion Planetas diferentes");
+            }
         }else{
-            tf_Planeta2.setText(p.getNombrePlaneta());
-            planeta2 = p;
+            if (p != planeta1) {
+                tf_Planeta2.setText(p.getNombrePlaneta());
+                planeta2 = p;
+            }else{
+                JOptionPane.showMessageDialog(null, "Favor seleccion Planetas diferentes");
+            }
         }
     }
     

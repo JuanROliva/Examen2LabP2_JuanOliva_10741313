@@ -20,6 +20,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Planeta 2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuP2ActionPerformed"/>
+          </Events>
         </MenuItem>
       </SubComponents>
     </Container>
@@ -157,9 +160,6 @@
               <ComponentRef name="pop"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="arbolMouseClicked"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -171,6 +171,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Colisionar Planetas"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bt_ColisionActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="cb_Cientifico">
       <Properties>
